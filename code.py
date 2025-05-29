@@ -15,14 +15,24 @@
 
 # Define the main game scene function to run the whole game.
 def game_scene():
-    # Get an image bank from a 16-bit bitmap
-    # to use a background bank for the game.
+    # Import a 16-bit bitmap image which contains
+    # the background image bank for the game.
     # image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
 
-    # Set the background to image 0 of the background bank
-    # with a 10x8 grid on the PyBadge display, representing
+    # Create a grid of the image background with a
+    # 10x8 tile grid on the PyBadge display, representing
     # its full size of 16x16 images it can contain.
     # background = stage.Grid(image_bank_background, 10, 8)
+
+    # Refresh the display at a 60 Hz frequency.
+    # game = stage.Stage(ugame.display, 60)
+
+    # Add the background image to the list of ordered layers.
+    # game.layers = [background]
+
+    # Render all the sprites per game scene by
+    # showing all the sprites on the layers list.
+    # game.render_block()
 
     # Construct an infinite loop.
     while True:
