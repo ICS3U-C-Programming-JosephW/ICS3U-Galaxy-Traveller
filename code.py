@@ -44,6 +44,61 @@ def game_scene():
 
     # Construct an infinite loop.
     while True:
+        # Get the user input from the
+        # current buttons they are pressing.
+        keys = ugame.buttons.get_pressed()
+
+        # Check if the user pressed the
+        # 'A' button on the PyBadge.
+        if keys & ugame.K_X:
+            # Display the resulting
+            # button pressed, 'A.'
+            print("A")
+        # Check if the user pressed the
+        # 'B' button on the PyBadge.
+        if keys & ugame.K_O:
+            # Display the resulting
+            # button pressed, 'B.'
+            print("B")
+        # Check if the user pressed the
+        # 'Start' button on the PyBadge.
+        if keys & ugame.K_START:
+            # Display the resulting
+            # button pressed, 'Start.'
+            print("Start")
+        # Check if the user pressed the
+        # 'Select' button on the PyBadge.
+        if keys & ugame.K_SELECT:
+            # Display the resulting
+            # button pressed, 'Select.'
+            print("Select")
+        # Check if the user pressed the
+        # keypad right button on the PyBadge.
+        if keys & ugame.K_RIGHT:
+            # Move the ship one pixel
+            # right from the origin.
+            ship.move(ship.x + 1, ship.y)
+        # Check if the user pressed the
+        # keypad left button on the PyBadge.
+        if keys & ugame.K_LEFT:
+            # Move the ship one pixel
+            # left towards the origin.
+            ship.move(ship.x - 1, ship.y)
+        # Check if the user pressed the
+        # keypad up button on the PyBadge.
+        if keys & ugame.K_UP:
+            # Move the ship one pixel
+            # up towards the origin, where
+            # up is negative.
+            ship.move(ship.x, ship.y - 1)
+        # Check if the user pressed the
+        # keypad down button on the PyBadge.
+        if keys & ugame.K_DOWN:
+            # Move the ship one pixel
+            # down from the origin, where
+            # down is positive.
+            ship.move(ship.x, ship.y + 1)
+
         # Redraw the sprites, with
         # only the ship for now.
         game.render_sprites([ship])
@@ -52,8 +107,6 @@ def game_scene():
         # to occur for the accurate refresh
         # rate, dependent on frequency.
         game.tick()
-
-        # Handle movement later.
 
 
 # Check if the special name of the file is __main__.
