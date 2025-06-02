@@ -26,6 +26,27 @@ def game_scene():
     # containing the game sprites.
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
 
+    # Keep initial state information for the 'A' button.
+    a_button = constants.button_state["button_up"]
+    # Keep initial state information for the 'B' button.
+    b_button = constants.button_state["button_up"]
+    # Keep initial state information for the 'Start' button.
+    start_button = constants.button_state["button_up"]
+    # Keep initial state information for the 'Select' button.
+    select_button = constants.button_state["button_up"]
+
+    # Initialize the 'pew' sound by opening its
+    # wave file. Use 'rb' to correctly handle
+    # the audio file by reading it in binary.
+    pew_sound = open("pew.wav", "rb")
+    # Access the game's audio.
+    sound = ugame.audio
+    # Stop all sounds from playing
+    # to avoid unusual sound states.
+    sound.stop()
+    # Enable the sound, if not activated already.
+    sound.mute(False)
+
     # Create a grid of the image background with a
     # 10x8 tile grid on the PyBadge display, representing
     # its full size of 16x16 images it can contain.
@@ -34,19 +55,28 @@ def game_scene():
     )
 
     # Create a ship sprite by selecting the sixth
-    # image off the sprite image bank (0 index). Set
-    # its position to 75 in the x and double its size
+    # image off its sprite bank (0 index). Set its
+    # position to 75 in the x and double its size
     # away from the bottom of the screen in the y.
     ship = stage.Sprite(
         image_bank_sprites, 5, 75, constants.SCREEN_Y - (2 * constants.SPRITE_SIZE)
+    )
+
+    # Create an alien sprite by selecting the last
+    # image off its sprite bank. Center it in the x
+    # and move it slightly down in the y.
+    alien = stage.Sprite(
+        image_bank_sprites,
+        9,
+        int(constants.SCREEN_X / 2 - constants.SPRITE_SIZE / 2),
+        16,
     )
 
     # Refresh the display at a 60 Hz frequency (60 FPS).
     game = stage.Stage(ugame.display, constants.FPS)
 
     # Set the layers with ordered items.
-    game.layers = [ship] + [background]
-
+    game.layers = [ship] + [alien] + [background]
     # Render the layers onto the screen.
     game.render_block()
 
@@ -59,9 +89,25 @@ def game_scene():
         # Check if the user pressed the
         # 'A' button on the PyBadge.
         if keys & ugame.K_X:
-            # Do nothing by using pass
-            # as a placeholder for now.
-            pass
+            # Check if it is the first time
+            # the 'A' button has been pressed.
+            if a_button == constants.button_state["button_up"]:
+                # Change its button state to 'just pressed.'
+                a_button = constants.button_state["button_just_pressed"]
+            # Otherwise, check if the 'A' button has just been pressed.
+            elif a_button == constants.button_state["button_just_pressed"]:
+                # Change its button state to 'still pressed.'
+                a_button = constants.button_state["button_still_pressed"]
+        # Otherwise, the 'A' button was not pressed.
+        else:
+            # Check if the 'A' button was still pressed before.
+            if a_button == constants.button_state["button_still_pressed"]:
+                # Change its button state to 'released.'
+                a_button = constants.button_state["button_released"]
+            # Otherwise, the button was already released.
+            else:
+                # Change its button state to the initial state.
+                a_button = constants.button_state["button_up"]
         # Check if the user pressed the
         # 'B' button on the PyBadge.
         if keys & ugame.K_O:
@@ -127,9 +173,14 @@ def game_scene():
             # as a placeholder for now.
             pass
 
+        # Check if the A button was 'just pressed.'
+        if a_button == constants.button_state["button_just_pressed"]:
+            # Play the 'pew' sound.
+            sound.play(pew_sound)
+
         # Redraw the sprites, with
         # only the ship for now.
-        game.render_sprites([ship])
+        game.render_sprites([ship] + [alien])
 
         # Wait for the 1/60th of a second
         # to occur for the accurate refresh
