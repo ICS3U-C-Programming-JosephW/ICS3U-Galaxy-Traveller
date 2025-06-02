@@ -17,6 +17,71 @@ import stage
 import constants
 
 
+# Define the menu scene function to run the starting menu.
+def menu_scene():
+    # Import a 16-bit bitmap image which contains
+    # the background image bank for the game.
+    image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
+
+    # Create a grid of the menu background with a
+    # 10x8 tile grid on the PyBadge display, representing
+    # its full size of 16x16 images it can contain.
+    background = stage.Grid(
+        image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y
+    )
+
+    # Store a list for the text objects.
+    text = []
+    # Create a new text object.
+    text1 = stage.Text(
+        width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None
+    )
+    # Move the text object 20 pixels
+    # right and 10 pixels down.
+    text1.move(20, 10)
+    # Set the text to 'MT Game Studios.'
+    text1.text("MT Game Studios")
+    # Append the text object to the text list.
+    text.append(text1)
+
+    # Create another text object.
+    text2 = stage.Text(
+        width=29, height=12, font=None, palette=constants.RED_PALETTE, buffer=None
+    )
+    # Move the text object 40 pixels
+    # right and 110 pixels down.
+    text2.move(40, 110)
+    # Set the text to 'PRESS START.'
+    text2.text("PRESS START")
+    # Append the text object to the text list.
+    text.append(text2)
+
+    # Refresh the display at a 60 Hz frequency (60 FPS).
+    game = stage.Stage(ugame.display, constants.FPS)
+
+    # Set the layers with ordered items.
+    game.layers = text + [background]
+    # Render the layers onto the screen.
+    game.render_block()
+
+    # Construct an infinite loop.
+    while True:
+        # Get the user input from the
+        # current buttons they are pressing.
+        keys = ugame.buttons.get_pressed()
+
+        # Check if the user pressed the
+        # 'Start' button on the PyBadge.
+        if keys & ugame.K_START:
+            # Run the main game scene function.
+            game_scene()
+
+        # Wait for the 1/60th of a second
+        # to occur for the accurate refresh
+        # rate, dependent on frequency.
+        game.tick()
+
+
 # Define the main game scene function to run the whole game.
 def game_scene():
     # Import a 16-bit bitmap image which contains
@@ -190,5 +255,5 @@ def game_scene():
 
 # Check if the special name of the file is __main__.
 if __name__ == "__main__":
-    # Run the main game scene function if so.
-    game_scene()
+    # Run the menu scene function if so.
+    menu_scene()
