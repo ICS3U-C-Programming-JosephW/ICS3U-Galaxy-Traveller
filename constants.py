@@ -15,6 +15,27 @@ SCREEN_GRID_Y = 8
 SPRITE_SIZE = 16
 # Set a constant for the total number of aliens.
 TOTAL_NUMBER_OF_ALIENS = 5
+# Set a constant for the total number of lasers.
+TOTAL_NUMBER_OF_LASERS = 5
+# Set a constant for the ship speed in pixels.
+SHIP_SPEED = 1
+# Set a constant for the alien speed in pixels.
+ALIEN_SPEED = 1
+# Set a constant for the laser speed in pixels.
+LASER_SPEED = 2
+# Set a constant for the off
+# screen laser position in the x.
+OFF_SCREEN_X = -100
+# Set a constant for the off
+# screen laser position in the y.
+OFF_SCREEN_Y = -100
+# Set a constant for the negative sprite size
+# to get itself off the top of the screen.
+OFF_TOP_SCREEN = -1 * SPRITE_SIZE
+# Set a constant for the resulting
+# position needed to get the sprite
+# off the bottom of the screen.
+OFF_BOTTOM_SCREEN = SCREEN_Y + SPRITE_SIZE
 # Set a constant for the frames per second (frequency).
 FPS = 60
 # Set a constant for the movement speed of the sprite in pixels.
