@@ -12,15 +12,106 @@ import ugame
 # screen display functions.
 import stage
 
+# Import the time module for
+# time-related functions.
+import time
+
+# Import the random module for
+# random number generators.
+import random
+
 # Import the constants file
 # for useful constants.
 import constants
 
 
+# Define the splash scene function to introduce the starting menu.
+def splash_scene():
+    # Initialize the 'coin' sound by opening its
+    # wave file. Use 'rb' to correctly handle
+    # the audio file by reading it in binary.
+    coin_sound = open("coin.wav", "rb")
+    # Access the game's audio.
+    sound = ugame.audio
+    # Stop all sounds from playing
+    # to avoid unusual sound states.
+    sound.stop()
+    # Enable the sound, if not activated already.
+    sound.mute(False)
+    # Play the initial coin sound
+    # for the splash scene.
+    sound.play(coin_sound)
+
+    # Import a 16-bit bitmap image which contains
+    # the background image bank for the game.
+    image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
+
+    # Create a grid of the menu background with a
+    # 10x8 tile grid on the PyBadge display, representing
+    # its full size of 16x16 images it can contain.
+    background = stage.Grid(
+        image_bank_mt_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y
+    )
+
+    # Used this program to split the light bulb image into tiles:
+    # https://ezgif.com/sprite-cutter/ezgif-5-818cdbcc3f66.png
+
+    # Manually set the first recurring
+    # column of tiles and their locations.
+    background.tile(2, 2, 0)
+    background.tile(3, 2, 1)
+    background.tile(4, 2, 2)
+    background.tile(5, 2, 3)
+    background.tile(6, 2, 4)
+    background.tile(7, 2, 0)
+
+    # Manually set the second recurring
+    # column of tiles and their locations.
+    background.tile(2, 3, 0)
+    background.tile(3, 3, 5)
+    background.tile(4, 3, 6)
+    background.tile(5, 3, 7)
+    background.tile(6, 3, 8)
+    background.tile(7, 3, 0)
+
+    # Manually set the third recurring
+    # column of tiles and their locations.
+    background.tile(2, 4, 0)
+    background.tile(3, 4, 9)
+    background.tile(4, 4, 10)
+    background.tile(5, 4, 11)
+    background.tile(6, 4, 12)
+    background.tile(7, 4, 0)
+
+    # Manually set the fourth recurring
+    # column of tiles and their locations.
+    background.tile(2, 5, 0)
+    background.tile(3, 5, 0)
+    background.tile(4, 5, 13)
+    background.tile(5, 5, 14)
+    background.tile(6, 5, 0)
+    background.tile(7, 5, 0)
+
+    # Refresh the display at a 60 Hz frequency (60 FPS).
+    game = stage.Stage(ugame.display, constants.FPS)
+
+    # Set the layers with ordered items.
+    game.layers = [background]
+    # Render the layers onto the screen.
+    game.render_block()
+
+    # Construct an infinite loop.
+    while True:
+        # Wait for two seconds.
+        time.sleep(2.0)
+        # Run the menu scene function.
+        menu_scene()
+
+
 # Define the menu scene function to run the starting menu.
 def menu_scene():
     # Import a 16-bit bitmap image which contains
-    # the background image bank for the game.
+    # the background image bank for the menu.
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
 
     # Create a grid of the menu background with a
@@ -118,6 +209,18 @@ def game_scene():
     background = stage.Grid(
         image_bank_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y
     )
+
+    # Loop over every column of the background grid.
+    for x_location in range(constants.SCREEN_GRID_X):
+        # Nest another for loop to loop over every
+        # row of the current background grid column.
+        for y_location in range(constants.SCREEN_GRID_Y):
+            # Pick a random integer between one and
+            # three to generate a random tile number.
+            tile_picked = random.randint(1, 3)
+            # Set the background tile to the iterated
+            # location with the random tile number.
+            background.tile(x_location, y_location, tile_picked)
 
     # Create a ship sprite by selecting the sixth
     # image off its sprite bank (0 index). Set its
@@ -255,5 +358,5 @@ def game_scene():
 
 # Check if the special name of the file is __main__.
 if __name__ == "__main__":
-    # Run the menu scene function if so.
-    menu_scene()
+    # Run the splash scene function if so.
+    splash_scene()
