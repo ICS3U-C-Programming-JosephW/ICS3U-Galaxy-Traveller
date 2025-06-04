@@ -3,6 +3,7 @@
 # Date: May 30, 2025
 # This module contains constants.
 
+
 # Set a constant for the screen length.
 SCREEN_X = 160
 # Set a constant for the screen width.
@@ -41,6 +42,7 @@ FPS = 60
 # Set a constant for the movement speed of the sprite in pixels.
 SPRITE_MOVEMENT_SPEED = 1
 
+
 # Set a constant dictionary to hold the possible button states.
 button_state = {
     "button_up": "up",
@@ -48,6 +50,7 @@ button_state = {
     "button_still_pressed": "still pressed",
     "button_released": "released",
 }
+
 
 # Set a constant to hold the hexadecimal
 # arrangement for a red palette.

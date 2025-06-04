@@ -4,21 +4,26 @@
 # This main file is for the Space
 # Aliens program on the PyBadge.
 
+
 # Import the ugame module for
 # managing sounds and controls.
 import ugame
+
 
 # Import the stage module for
 # screen display functions.
 import stage
 
+
 # Import the time module for
 # time-related functions.
 import time
 
+
 # Import the random module for
 # random number generators.
 import random
+
 
 # Import the constants file
 # for useful constants.
@@ -175,6 +180,9 @@ def menu_scene():
 
 # Define the main game scene function to run the whole game.
 def game_scene():
+    # Initialize a score variable to use later.
+    score = 0
+
     # Nest a function to take an alien off
     # the screen and prepare its position.
     def show_alien():
@@ -225,6 +233,13 @@ def game_scene():
     # Enable the sound, if not activated already.
     sound.mute(False)
 
+    # Initialize the 'boom' sound by opening its
+    # wave file. Use 'rb' to correctly handle
+    # the audio file by reading it in binary.
+    boom_sound = open("boom.wav", "rb")
+    # Enable the sound, if not activated already.
+    sound.mute(False)
+
     # Create a grid of the image background with a
     # 10x8 tile grid on the PyBadge display, representing
     # its full size of 16x16 images it can contain.
@@ -261,7 +276,7 @@ def game_scene():
             image_bank_sprites, 9, constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y
         )
         # Append the alien to the alien list.
-        aliens.append(a_single_laser)
+        aliens.append(a_single_alien)
 
     # Place an alien onto the screen.
     show_alien()
@@ -432,6 +447,48 @@ def game_scene():
                     )
                     # Place an alien onto the screen.
                     show_alien()
+
+        # Loop over the number of lasers in the laser list.
+        for laser_number in range(len(lasers)):
+            # Check if the laser is on the screen in the x.
+            if lasers[laser_number].x > 0:
+                # Nest another for loop to loop over the
+                # number of aliens in the alien list.
+                for alien_number in range(len(aliens)):
+                    # Check if the alien is on the screen in the x.
+                    if aliens[alien_number].x > 0:
+                        # Check if the laser is colliding with the
+                        # alien by using their corresponding points.
+                        if stage.collide(
+                            lasers[laser_number].x + 6,
+                            lasers[laser_number].y + 2,
+                            lasers[laser_number].x + 11,
+                            lasers[laser_number].y + 12,
+                            aliens[alien_number].x + 1,
+                            aliens[alien_number].y,
+                            aliens[alien_number].x + 15,
+                            aliens[alien_number].y + 15,
+                        ):
+                            # Move the alien off the screen.
+                            aliens[alien_number].move(
+                                constants.OFF_SCREEN_X,
+                                constants.OFF_SCREEN_Y,
+                            )
+                            # Move the laser off the screen.
+                            lasers[laser_number].move(
+                                constants.OFF_SCREEN_X,
+                                constants.OFF_SCREEN_Y,
+                            )
+                            # Stop any current sounds.
+                            sound.stop()
+                            # Play the 'boom' sound.
+                            sound.play(boom_sound)
+                            # Show an alien.
+                            show_alien()
+                            # Show another alien.
+                            show_alien()
+                            # Increment the score by 1.
+                            score = score + 1
 
         # Render all of the sprites.
         game.render_sprites(aliens + lasers + [ship])
