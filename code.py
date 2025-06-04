@@ -180,8 +180,21 @@ def menu_scene():
 
 # Define the main game scene function to run the whole game.
 def game_scene():
-    # Initialize a score variable to use later.
+    # Initialize a score variable.
     score = 0
+    # Set a white text object for the
+    # score with its size accordingly.
+    score_text = stage.Text(width=29, height=14)
+    # Clear the score text to update it.
+    score_text.clear()
+    # Move the text cursor to
+    # the top-left hand corner.
+    score_text.cursor(0, 0)
+    # Move the text down slightly.
+    score_text.move(1, 1)
+    # Format the score text to
+    # show the current score.
+    score_text.text("Score: {0}".format(score))
 
     # Nest a function to take an alien off
     # the screen and prepare its position.
@@ -296,7 +309,7 @@ def game_scene():
     game = stage.Stage(ugame.display, constants.FPS)
 
     # Set the layers with ordered items.
-    game.layers = aliens + lasers + [ship] + [background]
+    game.layers = [score_text] + lasers + [ship] + aliens + [background]
     # Render the layers onto the screen.
     game.render_block()
 
@@ -447,6 +460,22 @@ def game_scene():
                     )
                     # Place an alien onto the screen.
                     show_alien()
+                    # Decrement the score by one.
+                    score -= 1
+                    # Check if the score is negative.
+                    if score < 0:
+                        # Reset the score to 0.
+                        score = 0
+                    # Clear the score text to update it.
+                    score_text.clear()
+                    # Move the text cursor to
+                    # the top-left hand corner.
+                    score_text.cursor(0, 0)
+                    # Move the text down slightly.
+                    score_text.move(1, 1)
+                    # Format the score text to
+                    # show the current score.
+                    score_text.text("Score: {0}".format(score))
 
         # Loop over the number of lasers in the laser list.
         for laser_number in range(len(lasers)):
@@ -487,11 +516,21 @@ def game_scene():
                             show_alien()
                             # Show another alien.
                             show_alien()
-                            # Increment the score by 1.
+                            # Increment the score by one.
                             score = score + 1
+                            # Clear the score text to update it.
+                            score_text.clear()
+                            # Move the text cursor to
+                            # the top-left hand corner.
+                            score_text.cursor(0, 0)
+                            # Move the text down slightly.
+                            score_text.move(1, 1)
+                            # Format the score text to
+                            # show the current score.
+                            score_text.text("Score: {0}".format(score))
 
         # Render all of the sprites.
-        game.render_sprites(aliens + lasers + [ship])
+        game.render_sprites(lasers + [ship] + aliens)
 
         # Wait for the 1/60th of a second
         # to occur for the accurate refresh
