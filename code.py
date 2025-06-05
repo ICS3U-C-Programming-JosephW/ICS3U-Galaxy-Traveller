@@ -9,21 +9,21 @@
 # managing sounds and controls.
 import ugame
 
-
 # Import the stage module for
 # screen display functions.
 import stage
-
 
 # Import the time module for
 # time-related functions.
 import time
 
-
 # Import the random module for
 # random number generators.
 import random
 
+# Import the supervisor module
+# for handling game relaunching.
+import supervisor
 
 # Import the constants file
 # for useful constants.
@@ -48,7 +48,7 @@ def splash_scene():
     sound.play(coin_sound)
 
     # Import a 16-bit bitmap image which contains
-    # the background image bank for the game.
+    # the background image bank for the menu.
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
 
     # Create a grid of the menu background with a
@@ -238,18 +238,17 @@ def game_scene():
     # wave file. Use 'rb' to correctly handle
     # the audio file by reading it in binary.
     pew_sound = open("pew.wav", "rb")
+    # Initialize the 'boom' sound by opening its
+    # wave file.
+    boom_sound = open("boom.wav", "rb")
+    # Initialize the 'crash' sound by opening its
+    # wave file.
+    crash_sound = open("crash.wav", "rb")
     # Access the game's audio.
     sound = ugame.audio
     # Stop all sounds from playing
     # to avoid unusual sound states.
     sound.stop()
-    # Enable the sound, if not activated already.
-    sound.mute(False)
-
-    # Initialize the 'boom' sound by opening its
-    # wave file. Use 'rb' to correctly handle
-    # the audio file by reading it in binary.
-    boom_sound = open("boom.wav", "rb")
     # Enable the sound, if not activated already.
     sound.mute(False)
 
@@ -529,8 +528,113 @@ def game_scene():
                             # show the current score.
                             score_text.text("Score: {0}".format(score))
 
+        # Loop over the number of aliens in the alien list.
+        for alien_number in range(len(aliens)):
+            # Check if the alien is on the screen in the x.
+            if aliens[alien_number].x > 0:
+                # Check if the alien is colliding with the
+                # ship by using their corresponding points.
+                if stage.collide(
+                    aliens[alien_number].x + 1,
+                    aliens[alien_number].y,
+                    aliens[alien_number].x + 15,
+                    aliens[alien_number].y + 15,
+                    ship.x,
+                    ship.y,
+                    ship.x + 15,
+                    ship.y + 15,
+                ):
+                    # Stop all of the sounds.
+                    sound.stop()
+                    # Play the 'crash' sound.
+                    sound.play(crash_sound)
+                    # Wait for three seconds.
+                    time.sleep(3.0)
+                    # Run the game over scene function.
+                    game_over_scene(score)
+
         # Render all of the sprites.
         game.render_sprites(lasers + [ship] + aliens)
+
+        # Wait for the 1/60th of a second
+        # to occur for the accurate refresh
+        # rate, dependent on frequency.
+        game.tick()
+
+
+# Define the game over scene function
+# to handle the player losing with
+# their final score.
+def game_over_scene(final_score):
+    # Import a 16-bit bitmap image which contains
+    # the background image bank for the menu.
+    image_bank_2 = stage.Bank.from_bmp16("mt_game_studio.bmp")
+
+    # Create a grid of the menu background with a
+    # 10x8 tile grid on the PyBadge display, representing
+    # its full size of 16x16 images it can contain.
+    background = stage.Grid(
+        image_bank_2, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y
+    )
+
+    # Store a list for the text objects.
+    text = []
+    # Create a new text object for the final score.
+    text1 = stage.Text(
+        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
+    )
+    # Move the text object 22 pixels
+    # right and 20 pixels down.
+    text1.move(22, 20)
+    # Set the text to the final score
+    # formatted in two digits.
+    text1.text("Final Score: {:0>2d}".format(final_score))
+    # Append the text object to the text list.
+    text.append(text1)
+
+    # Create a second text object.
+    text2 = stage.Text(
+        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
+    )
+    # Move the text object 43 pixels
+    # right and 60 pixels down.
+    text2.move(43, 60)
+    # Set the text to 'GAME OVER.'
+    text2.text("GAME OVER")
+    # Append the text object to the text list.
+    text.append(text2)
+
+    # Create a third text object.
+    text3 = stage.Text(
+        width=29, height=14, font=None, palette=constants.BLUE_PALETTE, buffer=None
+    )
+    # Move the text object 32 pixels
+    # right and 110 pixels down.
+    text3.move(32, 110)
+    # Set the text to 'PRESS SELECT.'
+    text3.text("PRESS SELECT")
+    # Append the text object to the text list.
+    text.append(text3)
+
+    # Refresh the display at a 60 Hz frequency (60 FPS).
+    game = stage.Stage(ugame.display, constants.FPS)
+    # Set the layers with ordered items.
+    game.layers = text + [background]
+    # Render the layers onto the screen.
+    game.render_block()
+
+    # Construct an infinite loop.
+    while True:
+        # Get the user input from the
+        # current buttons they are pressing.
+        keys = ugame.buttons.get_pressed()
+
+        # Check if the user pressed the
+        # 'Select' button on the PyBadge.
+        if keys & ugame.K_SELECT:
+            # Reload the game by completely
+            # resetting the PyBadge.
+            supervisor.reload()
 
         # Wait for the 1/60th of a second
         # to occur for the accurate refresh
