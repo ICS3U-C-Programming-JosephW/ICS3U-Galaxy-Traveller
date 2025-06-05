@@ -341,24 +341,6 @@ def game_scene():
                 # Change its button state to the initial state.
                 a_button = constants.button_state["button_up"]
         # Check if the user pressed the
-        # 'B' button on the PyBadge.
-        if keys & ugame.K_O:
-            # Do nothing by using pass
-            # as a placeholder for now.
-            pass
-        # Check if the user pressed the
-        # 'Start' button on the PyBadge.
-        if keys & ugame.K_START:
-            # Do nothing by using pass
-            # as a placeholder for now.
-            pass
-        # Check if the user pressed the
-        # 'Select' button on the PyBadge.
-        if keys & ugame.K_SELECT:
-            # Do nothing by using pass
-            # as a placeholder for now.
-            pass
-        # Check if the user pressed the
         # keypad right button on the PyBadge.
         if keys & ugame.K_RIGHT:
             # Check if the x-coordinate of the
@@ -392,18 +374,6 @@ def game_scene():
                 # to zero, keeping it on the left
                 # edge of the screen.
                 ship.move(0, ship.y)
-        # Check if the user pressed the
-        # keypad up button on the PyBadge.
-        if keys & ugame.K_UP:
-            # Do nothing by using pass
-            # as a placeholder for now.
-            pass
-        # Check if the user pressed the
-        # keypad down button on the PyBadge.
-        if keys & ugame.K_DOWN:
-            # Do nothing by using pass
-            # as a placeholder for now.
-            pass
 
         # Check if the A button was 'just pressed.'
         if a_button == constants.button_state["button_just_pressed"]:
