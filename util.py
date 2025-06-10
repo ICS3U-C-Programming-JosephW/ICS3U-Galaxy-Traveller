@@ -5,13 +5,12 @@
 # and utility functions.
 
 # Construct a character class to hold character data.
-from ast import Pass
-
-
 class Character:
     # Define an initializer function to
     # hold all the character attributes.
-    def __init__(self, x, y, image_bank, tile_pos, image_bounds, lives, attack, defense, speed):
+    def __init__(
+        self, x, y, image_bank, tile_pos, image_bounds, lives, attack, defense, speed
+    ):
         # Add an x position to the object.
         self.x = x
         # Add a y position to the object.
@@ -30,14 +29,15 @@ class Character:
         self.defense = defense
         # Add speed to the object.
         self.speed = speed
+
     # Define a function to deal damage to another character.
     def damage_character(image_bounds, damage):
         pass
-        
 
 
 class Player(Character):
     pass
+
 
 class Enemy(Character):
     pass
