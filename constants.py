@@ -42,6 +42,11 @@ FPS = 60
 # Set a constant for the movement speed of the sprite in pixels.
 SPRITE_MOVEMENT_SPEED = 1
 
+# Set a constant for the maximum pool size.
+MAX_POOL_SIZE = 5
+# Set a constant for the maximum amount players.
+MAX_PLAYERS = 1
+
 
 # Set a constant dictionary to hold the possible button states.
 button_state = {
