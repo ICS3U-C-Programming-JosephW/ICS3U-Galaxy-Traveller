@@ -61,6 +61,10 @@ def deactivate(sprite):
     # Move the sprite off the screen.
     sprite.move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
 
+# Define a helper function to clamp numbers.
+def clamp(value, min_value, max_value):
+    # Return the combined minimum and maximum values.
+    return max(min_value, min(value, max_value))
 
 # Define a function to check for
 # collisions between two objects.
@@ -247,10 +251,10 @@ class Character:
     # Define a short function that
     # adjusts the character's lives.
     def adjust_lives(self, amount):
-        # Adjust the character's
+        # Clamp the character's
         # lives by adding the amount
         # with boundaries.
-        self.lives = max(0, min(self.lives + amount, self.max_lives))
+        self.lives = clamp(self.lives + amount, 0, self.max_lives)
 
 
 # Construct a player subclass to hold player data.
@@ -293,6 +297,8 @@ class Player(Character):
         self.moving_up = False
         # Initialize the down movement flag.
         self.moving_down = False
+        # Initialize the single-action button states.
+        self.A = self.B = self.start = self.select = constants.button_state["button_up"]
 
     # Define a function to manage collisions
     # between two characters.
@@ -318,6 +324,24 @@ class Player(Character):
         # Return the boolean result.
         return collided
 
+    # Define a function to advance the player.
+    def advance(self, keys):
+        # Check if the player
+        # is on the screen.
+        if is_on_screen(self.sprite):
+            # Move the projectile by its
+            # direction and speed.
+            self.sprite.move(
+                self.sprite.x + self.direction_x * self.speed,
+                self.sprite.y + self.direction_y * self.speed,
+            )
+        # Otherwise, the projectile
+        # has left the screen.
+        else:
+            # Move the projectile back to its
+            # initial position off the screen.
+            self.sprite.move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+
     # Define a function to update the player's inputs.
     def update_input(self, keys):
         # Update the pressed status of the
@@ -332,6 +356,26 @@ class Player(Character):
         # Update the pressed status of the
         # keypad up button on the PyBadge.
         self.moving_up = keys & ugame.K_UP
+
+        # Manage the 'A' button state.
+        manage_state(self.A, keys & ugame.K_X)
+        # Manage the 'B' button state.
+        manage_state(self.B, keys & ugame.K_O)
+        # Manage the 'Start' button state.
+        manage_state(self.start, keys & ugame.K_START)
+        # Manage the 'Select' button state.
+        manage_state(self.select, keys & ugame.K_SELECT)
+
+
+    # Define a function to update player movement.
+    def advance(self):
+        # Check if the player is moving left.
+        if self.moving_left:
+            pass
+
+
+
+
 
 
 class Enemy(Character):
