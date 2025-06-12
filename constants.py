@@ -3,7 +3,6 @@
 # Date: May 30, 2025
 # This module contains constants.
 
-
 # Set a constant for the screen length.
 SCREEN_X = 160
 # Set a constant for the screen width.
@@ -46,7 +45,10 @@ SPRITE_MOVEMENT_SPEED = 1
 MAX_POOL_SIZE = 5
 # Set a constant for the maximum amount players.
 MAX_PLAYERS = 1
-
+# Set a constant for the x-axis origin.
+ORIGIN_X = 0
+# Set a constant for the y-axis origin.
+ORIGIN_Y = 0
 
 # Set a constant dictionary to hold the possible button states.
 button_state = {
@@ -55,7 +57,6 @@ button_state = {
     "button_still_pressed": "still pressed",
     "button_released": "released",
 }
-
 
 # Set a constant to hold the hexadecimal
 # arrangement for a red palette.
