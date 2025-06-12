@@ -61,10 +61,12 @@ def deactivate(sprite):
     # Move the sprite off the screen.
     sprite.move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
 
+
 # Define a helper function to clamp numbers.
 def clamp(value, min_value, max_value):
     # Return the combined minimum and maximum values.
     return max(min_value, min(value, max_value))
+
 
 # Define a function to check for
 # collisions between two objects.
@@ -269,6 +271,7 @@ class Player(Character):
         x,
         y,
         bounds,
+        projectile,
         hit_impact,
         lives,
         max_lives,
@@ -289,6 +292,8 @@ class Player(Character):
             defense,
             speed,
         )
+        # Add a projectile object to the player.
+        self.projectile = projectile
         # Initialize the left movement flag.
         self.moving_left = False
         # Initialize the right movement flag.
@@ -324,24 +329,6 @@ class Player(Character):
         # Return the boolean result.
         return collided
 
-    # Define a function to advance the player.
-    def advance(self, keys):
-        # Check if the player
-        # is on the screen.
-        if is_on_screen(self.sprite):
-            # Move the projectile by its
-            # direction and speed.
-            self.sprite.move(
-                self.sprite.x + self.direction_x * self.speed,
-                self.sprite.y + self.direction_y * self.speed,
-            )
-        # Otherwise, the projectile
-        # has left the screen.
-        else:
-            # Move the projectile back to its
-            # initial position off the screen.
-            self.sprite.move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-
     # Define a function to update the player's inputs.
     def update_input(self, keys):
         # Update the pressed status of the
@@ -366,16 +353,57 @@ class Player(Character):
         # Manage the 'Select' button state.
         manage_state(self.select, keys & ugame.K_SELECT)
 
-
     # Define a function to update player movement.
     def advance(self):
         # Check if the player is moving left.
         if self.moving_left:
-            pass
-
-
-
-
+            # Move the sprite by its speed
+            # left and prevent it from moving
+            # off the screen in the x.
+            self.sprite.move(
+                clamp(
+                    self.sprite.x - self.speed, constants.ORIGIN_X, constants.SCREEN_X
+                ),
+                self.sprite.y,
+            )
+        # Check if the player is moving right.
+        if self.moving_right:
+            # Move the sprite by its speed
+            # right and prevent it from moving
+            # off the screen in the x.
+            self.sprite.move(
+                clamp(
+                    self.sprite.x + self.speed, constants.ORIGIN_X, constants.SCREEN_X
+                ),
+                self.sprite.y,
+            )
+        # Check if the player is moving up.
+        if self.moving_up:
+            # Move the sprite by its speed
+            # up and prevent it from moving
+            # off the screen in the y.
+            self.sprite.move(
+                self.sprite.x,
+                clamp(
+                    self.sprite.y - self.speed, constants.ORIGIN_Y, constants.SCREEN_Y
+                ),
+            )
+        # Check if the player is moving down.
+        if self.moving_down:
+            # Move the sprite by its speed
+            # down and prevent it from moving
+            # off the screen in the y.
+            self.sprite.move(
+                self.sprite.x,
+                clamp(
+                    self.sprite.y + self.speed, constants.ORIGIN_Y, constants.SCREEN_Y
+                ),
+            )
+        
+    # Define a function to manage the player's score.
+    def manage_score(self):
+        # Check if ...
+        pass 
 
 
 class Enemy(Character):
